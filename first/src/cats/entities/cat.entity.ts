@@ -3,4 +3,5 @@ export class Cat {
   name: string;
   stupid: boolean;
   active: boolean;
+  words: string[];
 }

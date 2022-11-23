@@ -13,6 +13,8 @@ import {
 } from '@nestjs/common';
 import { throws } from 'assert';
 import { CatsService } from './cats.service';
+import { CreateCatDto } from './dto/create-cat.dto';
+import { UpdateCatDto } from './dto/update-cat.dto';
 
 @Controller('cats')
 export class CatsController {
@@ -30,18 +32,20 @@ export class CatsController {
   //   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.catsServcice.findOne(id);
+  findOne(@Param('id') id: number) {
+    console.log(typeof id);
+    return this.catsServcice.findOne('' + id);
   }
 
   @Post()
-  create(@Body() body) {
-    return this.catsServcice.create(body);
+  create(@Body() createCatDto: CreateCatDto) {
+    // console.log(createCatDto instanceof CreateCatDto);
+    return this.catsServcice.create(createCatDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body) {
-    return this.catsServcice.update(id, body);
+  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
+    return this.catsServcice.update(id, updateCatDto);
   }
 
   @Delete(':id')

@@ -12,6 +12,7 @@ const getCats = (): Cat[] => {
     name: `Name ${item}`,
     stupid: Math.random() > 0.5 ? true : false,
     active: Math.random() > 0.5 ? true : false,
+    words: ['some', 'other'],
   }));
 };
 
@@ -33,6 +34,7 @@ export class CatsService {
 
   create(craeteCatDto: any) {
     this.cats.push(craeteCatDto);
+    return craeteCatDto;
   }
 
   update(id: string, updateCatDto: any) {
