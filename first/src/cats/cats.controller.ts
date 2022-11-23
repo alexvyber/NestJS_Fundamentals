@@ -25,11 +25,11 @@ export class CatsController {
     return this.catsServcice.findAll();
   }
 
-  //   @Get()
-  //   findAll(@Query() pagQuery) {
-  //     // const { limit, offset } = pagQuery;
-  //     return this.catsServcice.findAll();
-  //   }
+  @Get()
+  findAll(@Query() pagQuery) {
+    // const { limit, offset } = pagQuery;
+    return this.catsServcice.findAll();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: number) {
@@ -39,7 +39,6 @@ export class CatsController {
 
   @Post()
   create(@Body() createCatDto: CreateCatDto) {
-    // console.log(createCatDto instanceof CreateCatDto);
     return this.catsServcice.create(createCatDto);
   }
 
