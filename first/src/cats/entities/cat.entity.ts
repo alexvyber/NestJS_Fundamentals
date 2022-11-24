@@ -21,6 +21,9 @@ export class Cat {
   @Column()
   active: boolean;
 
+  @Column({ default: 0 })
+  recomendations: number;
+
   @JoinTable()
   @ManyToMany((type) => Word, (word) => word.cats, {
     cascade: true,

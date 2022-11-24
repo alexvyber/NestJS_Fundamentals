@@ -6,35 +6,29 @@ import {
 } from '@nestjs/common';
 import { Cat } from './entities/cat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { Word } from './entities/word.entity';
-
-const getCats = (): Cat[] => {
-  return [...Array(10)].map((item, index) => ({
-    id: index,
-    name: `Name ${item}`,
-    stupid: Math.random() > 0.5 ? true : false,
-    active: Math.random() > 0.5 ? true : false,
-    words: ['some', 'other'],
-  }));
-};
+import { PaginationQueryDto } from 'src/common/dto/paginationquery.dto';
+import { Event } from 'src/evenst/entities/event.entity';
 
 @Injectable()
 export class CatsService {
-  // private cats: Cat[] = getCats();
-
   constructor(
     @InjectRepository(Cat)
     private readonly catRepository: Repository<Cat>,
     @InjectRepository(Word)
     private readonly wordRepository: Repository<Word>,
+    private readonly connection: Connection,
   ) {}
 
-  findAll() {
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
     return this.catRepository.find({
       relations: ['words'],
+      skip: offset,
+      take: limit,
     });
   }
 
@@ -51,6 +45,7 @@ export class CatsService {
     if (!cat) {
       throw new NotFoundException(`Cat with ${id} not found`);
     }
+
     return cat;
   }
 
@@ -107,5 +102,28 @@ export class CatsService {
     }
 
     return this.wordRepository.create({ name });
+  }
+
+  async recommendCat(cat: Cat) {
+    const queryRunner = this.connection.createQueryRunner();
+
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      cat.recomendations++;
+      const recomendEvent = new Event();
+      recomendEvent.name = 'recomended_cat';
+      recomendEvent.type = 'cat';
+      recomendEvent.payload = { cat: cat.id };
+
+      await queryRunner.manager.save(cat);
+      await queryRunner.manager.save(recomendEvent);
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
