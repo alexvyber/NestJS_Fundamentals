@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './entities/cat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
@@ -12,6 +7,9 @@ import { UpdateCatDto } from './dto/update-cat.dto';
 import { Word } from './entities/word.entity';
 import { PaginationQueryDto } from 'src/common/dto/paginationquery.dto';
 import { Event } from 'src/evenst/entities/event.entity';
+import { SomeShit, SOME_SHIT } from './cats.constants';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import { catsConfig } from './config/cats.config';
 
 @Injectable()
 export class CatsService {
@@ -21,7 +19,44 @@ export class CatsService {
     @InjectRepository(Word)
     private readonly wordRepository: Repository<Word>,
     private readonly connection: Connection,
-  ) {}
+    @Inject(SOME_SHIT) someShit: SomeShit,
+    @Inject('OTHER_SHIT') otherShit: string[],
+    @Inject('ASYNC_SHIT') asyncShit: string[],
+    private readonly configService: ConfigService,
+    @Inject(catsConfig.KEY)
+    private readonly catsConfiguration: ConfigType<typeof catsConfig>,
+  ) {
+    console.log('🚀 ~ CatsService ~ someShit', someShit);
+    console.log('🚀 ~ CatsService ~ otherShit', otherShit);
+    console.log('🚀 ~ CatsService ~ asyncShit', asyncShit);
+
+    const host = this.configService.get<string>('DATABASE_HOST');
+    console.log('🚀 ~ CatsService ~ host', host);
+
+    const cunt = this.configService.get<string>('SOME_CUNT', 'CUUUUNT');
+    console.log('🚀 ~ CatsService ~ cunt', cunt);
+
+    const port = this.configService.getOrThrow<string>('database.port');
+    console.log('🚀 ~ CatsService ~ port', port);
+
+    const random = this.configService.getOrThrow<string>('database.randomShit');
+    console.log('🚀 ~ CatsService ~ random', random);
+
+    const cats = this.configService.getOrThrow<string>('cats');
+    console.log('🚀 ~ CatsService ~ cats', cats);
+
+    const [some, other] = (() => {
+      return [
+        this.configService.getOrThrow<string>('cats.some'),
+        this.configService.getOrThrow<string>('cats.other'),
+      ];
+    })();
+
+    console.log('🚀 ~ CatsService ~ some, other', some, other);
+
+    console.log(catsConfiguration.some);
+    console.log(catsConfiguration.other);
+  }
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
