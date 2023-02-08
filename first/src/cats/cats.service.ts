@@ -26,24 +26,24 @@ export class CatsService {
     @Inject(catsConfig.KEY)
     private readonly catsConfiguration: ConfigType<typeof catsConfig>,
   ) {
-    console.log('🚀 ~ CatsService ~ someShit', someShit);
-    console.log('🚀 ~ CatsService ~ otherShit', otherShit);
-    console.log('🚀 ~ CatsService ~ asyncShit', asyncShit);
+    // console.log('🚀 ~ CatsService ~ someShit', someShit);
+    // console.log('🚀 ~ CatsService ~ otherShit', otherShit);
+    // console.log('🚀 ~ CatsService ~ asyncShit', asyncShit);
 
     const host = this.configService.get<string>('DATABASE_HOST');
-    console.log('🚀 ~ CatsService ~ host', host);
+    // console.log('🚀 ~ CatsService ~ host', host);
 
     const cunt = this.configService.get<string>('SOME_CUNT', 'CUUUUNT');
-    console.log('🚀 ~ CatsService ~ cunt', cunt);
+    // console.log('🚀 ~ CatsService ~ cunt', cunt);
 
     const port = this.configService.getOrThrow<string>('database.port');
-    console.log('🚀 ~ CatsService ~ port', port);
+    // console.log('🚀 ~ CatsService ~ port', port);
 
     const random = this.configService.getOrThrow<string>('database.randomShit');
-    console.log('🚀 ~ CatsService ~ random', random);
+    // console.log('🚀 ~ CatsService ~ random', random);
 
     const cats = this.configService.getOrThrow<string>('cats');
-    console.log('🚀 ~ CatsService ~ cats', cats);
+    // console.log('🚀 ~ CatsService ~ cats', cats);
 
     const [some, other] = (() => {
       return [
@@ -52,7 +52,7 @@ export class CatsService {
       ];
     })();
 
-    console.log('🚀 ~ CatsService ~ some, other', some, other);
+    // console.log('🚀 ~ CatsService ~ some, other', some, other);
 
     console.log(catsConfiguration.some);
     console.log(catsConfiguration.other);

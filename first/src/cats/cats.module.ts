@@ -52,7 +52,7 @@ export class ShitFactory {
     {
       provide: 'ASYNC_SHIT',
       useFactory: async (connection: Connection): Promise<string[]> => {
-        console.log('🚀 ~ ASYNC_SHIT!!!!!!!!!');
+        // console.log('🚀 ~ ASYNC_SHIT!!!!!!!!!');
         const shit = await Promise.resolve(['some', 'shit']);
         return shit;
       },

@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CatRatingModule } from './cat-rating/cat-rating.module';
-// import { DatashitModule } from './datashit/datashit.module'; // example
 import { ConfigModule } from '@nestjs/config';
 import { z } from 'zod';
 import { appConfig } from './config/app.config';
+import { APP_PIPE } from '@nestjs/core';
+import { CommonModule } from './common/common.module';
 
 const envSchema = z
   .object({
@@ -17,6 +18,7 @@ const envSchema = z
     DATABASE_PASSWORD: z.string(),
     DATABASE_NAME: z.string(),
     RANDOM_SHIT: z.string(),
+    API_KEY: z.string(),
   })
   .required();
 
@@ -40,13 +42,16 @@ const envSchema = z
         synchronize: true,
       }),
     }),
+
     // DatashitModule.register({
     //   port: 2134,
     //   type: 'postgres',
     //   host: 'localhost',
     //   password: 'somePasdfasdf1234asfd',
     // }),
+
     CatsModule,
+
     ConfigModule.forRoot({
       validationSchema: envSchema,
       validate: (envs) => envSchema.parse(envs),
@@ -54,9 +59,17 @@ const envSchema = z
     }),
 
     CatRatingModule,
+
+    CommonModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
 })
 export class AppModule {}
 
