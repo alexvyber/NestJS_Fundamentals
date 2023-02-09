@@ -6,6 +6,8 @@ import { TimeoutInterceptor } from './common/interceptors/timeout/timeout.interc
 // import { ApiKeyGuard } from './common/guards/api-key/api-key.guard';
 import { WrapResponeInterceptor } from './common/interceptors/wrap-respone/wrap-respone.interceptor';
 
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -26,6 +28,16 @@ async function bootstrap() {
     new WrapResponeInterceptor(),
     new TimeoutInterceptor(),
   );
+
+  const options = new DocumentBuilder()
+    .setTitle('Swagger API')
+    .setDescription('Some description')
+    .setVersion('0.0.0.0.0.0.1')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+
+  SwaggerModule.setup('docs', app, document);
 
   // app.useGlobalGuards(new ApiKeyGuard());
 

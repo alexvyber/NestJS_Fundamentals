@@ -12,13 +12,12 @@ services:
     networks:
       - pg-admin
 
-  # test-db:
-  #   image: postgres:14-alpine
-  #   restart: always
-  #   ports:
-  #     - '5433:5432'
-  #   environment:
-  #     POSTGRES_PASSWORD: pass123
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
 
 networks:
   pg-admin:

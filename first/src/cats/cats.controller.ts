@@ -14,6 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Protocol } from 'src/common/decorators/protocol.decorator';
 // import { throws } from 'assert';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -23,11 +24,13 @@ import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 
+@ApiTags('Cats')
 @UsePipes(new ValidationPipe())
 @Controller('cats')
 export class CatsController {
   constructor(private readonly catsServcice: CatsService) {}
 
+  @ApiResponse({ status: 403, description: 'Some Forbidden Shit' })
   @Public()
   @Get()
   async findAll(

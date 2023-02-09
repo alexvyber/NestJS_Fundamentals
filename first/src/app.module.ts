@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { appConfig } from './config/app.config';
 import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 const envSchema = z
   .object({
@@ -24,6 +25,7 @@ const envSchema = z
 
 @Module({
   imports: [
+    MongooseModule.forRoot('mongodb://root:example@localhost:27017/'),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
